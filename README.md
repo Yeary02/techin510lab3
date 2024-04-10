@@ -22,6 +22,31 @@ After launching the app, you'll be greeted with a simple and intuitive UI:
 - Viewing and Searching Prompts: Use the search bar to filter prompts by title or view all by leaving it empty. You can also filter prompts based on their favorite status.
 - Editing and Deleting Prompts: Each saved prompt can be edited or deleted directly from its expanded view.
 
+### Using Azure PostgreSQL as Database
+
+This application is configured to use Azure PostgreSQL as its database backend. Follow these steps to set up your Azure PostgreSQL database and connect it to the app.
+
+- Setting Up Azure PostgreSQL
+- Create an Azure PostgreSQL Database Instance: Log in to the Azure Portal.
+- Navigate to "Databases" and select "Azure Database for PostgreSQL".
+- Click on "Add" to create a new database instance. Follow the prompts to configure your database, such as selecting the database version, compute and storage options, and setting up the administrator account details.
+- Configure Firewall Rules:
+    - Once your database instance is set up, navigate to its overview page.
+    - Under "Settings", find and select "Connection security".
+    - Add a new rule to allow connections from your IP address. Azure might also provide an option to allow connections from Azure services or add a range of trusted IP addresses.
+
+### Configuring the Application to Use Azure PostgreSQL
+
+1. Create a .env File for Environment Variables:
+```
+DB_HOST=yourdatabase.postgres.database.azure.com
+DB_NAME=postgres
+DB_USER=username@yourdatabase
+DB_PASS=your_password
+```
+2. Load Environment Variables in Your Application and Run
+
+
 ## What's Included
 
 - `app.py`: The main Flask application
