@@ -43,29 +43,6 @@ def create_prompt(title, description, is_favorite):
                 (title, description, is_favorite)
             )
             conn.commit()
-
-# List all prompts or filtered/searched prompts
-# def list_prompts(search_query=None, favorite_filter=None):
-#     with closing(get_db_connection()) as conn:
-#         with conn.cursor() as cur:
-#             base_query = "SELECT id, title, description, is_favorite FROM prompts"
-#             conditions = []
-#             params = []
-            
-#             if search_query:
-#                 conditions.append("title ILIKE %s")
-#                 params.append(f"%{search_query}%")
-            
-#             if favorite_filter is not None:
-#                 conditions.append("is_favorite = %s")
-#                 params.append(favorite_filter)
-            
-#             if conditions:
-#                 base_query += " WHERE " + " AND ".join(conditions)
-            
-#             cur.execute(base_query, tuple(params))
-#             prompts = cur.fetchall()
-#             return prompts
         
 def list_prompts(search_query=None, favorite_filter=None, sort_by='title', sort_order='asc'):
     with closing(get_db_connection()) as conn:
@@ -158,27 +135,25 @@ def main():
 
         # Display each prompt title with an expander to show more details
         with st.expander(prompt_title):
-            # Edit mode state for each prompt
+            # edit mode
             edit_mode = st.session_state.get(f'edit_mode_{prompt_id}', False)
 
             if edit_mode:
                 new_title = st.text_input("Title", value=prompt_title, key=f"title_{prompt_id}")
                 new_description = st.text_area("Description", value=prompt_description, key=f"desc_{prompt_id}")
                 
-                # Save button replaces Edit and Delete in edit mode
                 if st.button("Save", key=f"save_{prompt_id}"):
                     update_prompt(prompt_id, new_title, new_description)
-                    st.session_state[f'edit_mode_{prompt_id}'] = False  # Exit edit mode
+                    st.session_state[f'edit_mode_{prompt_id}'] = False 
                     st.experimental_rerun()
-            else:
+            else: # not in edit mode
                 st.write(f"Description: {prompt_description}")
-                # Checkbox for favorite status, remains visible even outside edit mode
+                # Checkbox
                 fav_status = st.checkbox("Favorite", value=prompt_is_favorite, key=f"fav_{prompt_id}")
                 if fav_status != prompt_is_favorite:
                     update_favorite_status(prompt_id, fav_status)
                     st.experimental_rerun()
 
-                # Edit and Delete buttons are only visible when not in edit mode
                 col1, col2 = st.columns(2)
                 with col1:
                     if st.button("Edit", key=f"edit_{prompt_id}"):
